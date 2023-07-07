@@ -20,7 +20,7 @@ def main():
     for item in parsed_items:
         if item["price"] <= int(os.environ.get("TARGET_PRICE")):
             below_target_items.append(item)
-            send_discord_webhook([get_embed(item)])
+            send_discord_webhook("", [get_embed(item)])
 
 
 def parse_items(soup: BeautifulSoup):
@@ -59,9 +59,9 @@ def hoge_url(url):
     return urlunparse(new_url_parts)
 
 
-def send_discord_webhook(embeds):
+def send_discord_webhook(msg: str, embeds: list):
     headers = {"Content-Type": "application/json"}
-    data = {"embeds":  embeds}
+    data = {"embeds":  embeds, 'content': msg}
     response = requests.post(os.environ.get("WEBHOOK_URL"), headers=headers, data=json.dumps(data))
     if response.status_code == 204:
         print("Webhook sent successfully.")
@@ -86,6 +86,9 @@ def get_embed(item: dict):
 if __name__ == "__main__":
     dotenv.load_dotenv()
     headers = {"User-Agent": os.environ.get("USER_AGENT")}
+
+    send_discord_webhook("Server Start!!", [])
+
     while True:
         main()
         time.sleep(int(os.environ.get("INTERVAL")))
