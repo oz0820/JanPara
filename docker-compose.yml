@@ -1,0 +1,13 @@
+version: "3"
+services:
+  janc-paradise:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    environment:
+      TZ: Asia/Tokyo
+    env_file:
+      - .env
+    volumes:
+      - ./:/app/
